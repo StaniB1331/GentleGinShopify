@@ -1,3 +1,4 @@
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>*{box-sizing:border-box;margin:0;padding:0}
@@ -19,7 +20,8 @@ label{font-size:10px;letter-spacing:.1em;color:var(--m);text-transform:uppercase
 input[type=text],input[type=email],input[type=tel],textarea{background:var(--w);border:1px solid var(--b);border-radius:4px;padding:9px 11px;font-size:14px;font-family:inherit;color:var(--d);width:100%;transition:border-color .2s}
 input:focus,textarea:focus{outline:none;border-color:var(--g)}
 .tb{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
-.ti{padding:7px 16px;border-radius:4px;border:1px solid var(--b);background:var(--w);text-align:center;transition:all .2s}
+.ti{padding:7px 16px;border-radius:4px;border:1px solid var(--b);background:var(--w);text-align:center;transition:all .2s;cursor:pointer;user-select:none}
+.ti:hover{border-color:var(--g);background:rgba(200,168,75,.06)}
 .ti.on{border-color:var(--g);background:var(--gl)}
 .tl{font-family:'Playfair Display',serif;font-weight:700;font-size:13px}
 .td{font-size:11px;color:var(--g);font-weight:600}
@@ -141,19 +143,28 @@ textarea{resize:vertical}
 <div class="gd"></div>
 <div class="sec">
   <div class="st" id="lbl-produkte">Produktauswahl</div>
-  <div class="tb">
-    <div class="ti" id="t1"><div class="tl">1 VE</div><div class="td">Standard</div></div>
-    <div class="ti" id="t3"><div class="tl">3 VE</div><div class="td">-8%</div></div>
-    <div class="ti" id="t6"><div class="tl">6 VE</div><div class="td">-15%</div></div>
-    <div id="cart-badge" style="display:none;align-items:center;gap:5px;background:var(--g);border-radius:16px;padding:4px 11px 4px 8px;margin-left:6px">
-      <span style="font-size:13px">🛒</span>
-      <span id="cart-num" style="font-weight:700;font-size:13px;color:#fff;min-width:10px;display:inline-block"></span>
-      <span id="cart-label" style="font-size:10px;color:rgba(255,255,255,.85);letter-spacing:.04em">VE</span>
+  <div class="tb" style="align-items:flex-start;flex-direction:column;gap:10px">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <div class="ti" id="t0" onclick="setTierAll(0)" style="cursor:pointer;user-select:none" title="Einzelflaschen bestellen"><div class="tl">1 Fl.</div><div class="td" style="color:#aaa">Einzeln</div></div>
+      <div class="ti" id="t1" onclick="setTierAll(1)" style="cursor:pointer;user-select:none" title="Verkaufseinheiten bestellen (1 VE = 6 Fl.)"><div class="tl">1 VE</div><div class="td">Standard</div></div>
+      <div class="ti" id="t3" style="cursor:default;user-select:none" title="Wird automatisch aktiv ab 3 VE je Format · -8%"><div class="tl">3 VE</div><div class="td">-8%</div></div>
+      <div class="ti" id="t6" style="cursor:default;user-select:none" title="Wird automatisch aktiv ab 6 VE je Format · -15%"><div class="tl">6 VE</div><div class="td">-15%</div></div>
+      <div id="cart-badge" style="display:none;align-items:center;gap:5px;background:var(--g);border-radius:16px;padding:4px 11px 4px 8px;margin-left:6px">
+        <span style="font-size:13px">🛒</span>
+        <span id="cart-num" style="font-weight:700;font-size:13px;color:#fff;min-width:10px;display:inline-block"></span>
+        <span id="cart-label" style="font-size:10px;color:rgba(255,255,255,.85);letter-spacing:.04em">VE</span>
+      </div>
+      <div id="clear-btn" onclick="clearAll()" style="display:none;align-items:center;gap:4px;cursor:pointer;padding:4px 10px;border:1px solid #ddd;border-radius:16px;font-size:11px;color:#aaa;background:#fff;transition:all .2s;margin-left:2px" title="Alle Mengen zurücksetzen" onmouseenter="this.style.borderColor='var(--g)';this.style.color='var(--g)'" onmouseleave="this.style.borderColor='#ddd';this.style.color='#aaa'">
+        <span style="font-size:13px;line-height:1">&#x2715;</span><span style="letter-spacing:.04em">Alles löschen</span>
+      </div>
     </div>
-    <div class="tn" id="lbl-staffel">Staffel pro Produkt &nbsp;&#183;&nbsp; 1 VE = 6 Fl. &nbsp;&#183;&nbsp; ab 2 VE gesamt versandkostenfrei</div>
+    <div style="font-size:11px;color:#aaa;font-style:italic;padding-left:2px">
+      ↑ Modus wählen &nbsp;·&nbsp; Mengen bitte selbst eintragen &nbsp;·&nbsp; <strong style="color:var(--g)">3 VE / 6 VE leuchten automatisch</strong> sobald die Menge erreicht ist
+    </div>
+    <div class="tn" id="lbl-staffel" style="margin:0;font-style:italic">Staffel je Format &nbsp;&#183;&nbsp; 1 VE = 6 Fl. &nbsp;&#183;&nbsp; ab 2 VE gesamt versandkostenfrei</div>
   </div>
   <div class="tbl">
-    <div class="th"><span>Produkt</span><span>SKU</span><span>Alc.</span><span>EK / Fl.</span><span>EK / VE (6 Fl.)</span><span>Menge VE</span><span>Gesamt</span></div>
+    <div class="th"><span>Produkt</span><span>SKU</span><span>Alc.</span><span>EK / Fl.</span><span>EK / VE (6 Fl.)</span><span>Menge</span><span>Gesamt</span></div>
     <div id="rows"></div>
   </div>
 </div>
@@ -173,13 +184,13 @@ textarea{resize:vertical}
 </div>
 <div class="sw">
   <div id="min-order-hint" style="display:none;margin-bottom:12px;padding:10px 18px;background:rgba(200,168,75,.12);border:1px solid rgba(200,168,75,.4);border-radius:6px;font-size:12px;color:#8a6f1e;text-align:center">
-    ⚠️ <strong>Mindestbestellung:</strong> 1 VE pro Produkt = 6 Flaschen &nbsp;·&nbsp; Ab 2 VE gesamt versandkostenfrei
+    ⚠️ <strong>Versandkosten:</strong> 4,99 € bei unter 2 VE Gesamtmenge &nbsp;·&nbsp; Ab 2 VE (beliebig kombiniert) versandkostenfrei
   </div>
   <div style="margin-bottom:12px;display:flex;align-items:flex-start;gap:10px;justify-content:center;max-width:480px;margin-left:auto;margin-right:auto">
     <input type="checkbox" id="agb" onchange="calc()" style="margin-top:3px;accent-color:var(--g);width:15px;height:15px;flex-shrink:0;cursor:pointer"/>
     <label for="agb" style="font-size:12px;color:var(--m);cursor:pointer;text-align:left">
-      Ich akzeptiere die <a href="https://www.gentlegin.de/agb" target="_blank" style="color:var(--g);text-decoration:none">AGB</a> und 
-      <a href="https://www.gentlegin.de/datenschutz" target="_blank" style="color:var(--g);text-decoration:none">Datenschutzbestimmungen</a> der Gentle Spirits GmbH und bestätige, dass ich gewerblicher Händler bin.
+      Ich akzeptiere die <a href="https://gentlegin.com/policies/terms-of-service" target="_blank" style="color:var(--g);text-decoration:none">AGB</a> und 
+      <a href="https://gentlegin.com/policies/privacy-policy" target="_blank" style="color:var(--g);text-decoration:none">Datenschutzbestimmungen</a> der Gentle Spirits GmbH und bestätige, dass ich gewerblicher Händler bin.
     </label>
   </div>
   <button class="btn" id="sub" disabled onclick="send()"><span id="lbl-btn">Bestellung absenden</span></button>
@@ -230,10 +241,85 @@ var PRODS=[
   {id:"GG3X100",n:"Tasting Box",s:"3x100 ml",  a:"40/47%",u:32.90,e:19.90,d:"Saffron · Tea Dry · Pink One",   ean:"4260566541102"}
 ];
 
-var Q={};
-PRODS.forEach(function(p){Q[p.id]=0;});
+// Q stores VE quantities per product; QFL stores single-bottle overrides
+// SELECTED_TIER = which button was clicked last (for info display only, no auto-fill)
+var SELECTED_TIER = null;
+var Q={}, QFL={};
+PRODS.forEach(function(p){Q[p.id]=0; QFL[p.id]=false;});
 function f(n){return n.toFixed(2).replace(".",",")+"\u00a0\u20ac";}
-function getTier(v){return v>=6?{id:"t6",d:.15,l:"6 VE"}:v>=3?{id:"t3",d:.08,l:"3 VE"}:v>=1?{id:"t1",d:0,l:"1 VE"}:null;}
+
+// Produkt-Größengruppen: 500ml, 100ml, 3x100ml (Tasting Box) → unabhängige VE-Töpfe
+var SIZE_GROUP = {};
+PRODS.forEach(function(p){
+  if(p.s==='500 ml') SIZE_GROUP[p.id]='500';
+  else if(p.s==='100 ml') SIZE_GROUP[p.id]='100';
+  else SIZE_GROUP[p.id]='box'; // 3x100 ml Tasting Box
+});
+
+// Rabattstufe aus VE-Menge berechnen (gleiche Stufen für alle Gruppen)
+function calcTierFromVE(totalVE){
+  return totalVE>=6?{id:'t6',d:.15,l:'6 VE'}:
+         totalVE>=3?{id:'t3',d:.08,l:'3 VE'}:
+         totalVE>=1?{id:'t1',d:0,l:'1 VE'}:null;
+}
+
+// Tier = vorgewählter Button ODER automatisch aus Gesamtmenge der JEWEILIGEN GRUPPE
+function getActiveTier(totalVE){
+  // Im 1 Fl. Modus: Rabatt trotzdem aus umgerechneten VE ableiten
+  if(SELECTED_TIER==='t0'){
+    return totalVE>=6?{id:'t6',d:.15,l:'6 VE'}:
+           totalVE>=3?{id:'t3',d:.08,l:'3 VE'}:
+           totalVE>=1?{id:'t1',d:0,l:'1 VE'}:
+                      {id:'t0',d:0,l:'1 Fl.'};
+  }
+  if(SELECTED_TIER==='t6') return {id:'t6',d:.15,l:'6 VE'};
+  if(SELECTED_TIER==='t3') return {id:'t3',d:.08,l:'3 VE'};
+  if(SELECTED_TIER==='t1') return {id:'t1',d:0,l:'1 VE'};
+  // Kein Button aktiv → aus tatsächlicher Gesamtmenge der Gruppe ableiten
+  return calcTierFromVE(totalVE);
+}
+function getTier(totalVE){ return getActiveTier(totalVE); }
+
+// VE-Mengen pro Größengruppe berechnen (fl-Modus berücksichtigt)
+function getGroupVEs(fl){
+  var groups = {500:0, 100:0, box:0};
+  PRODS.forEach(function(p){
+    var qty = Q[p.id];
+    if(qty===0) return;
+    var g = SIZE_GROUP[p.id];
+    if(fl){
+      groups[g] += Math.floor(qty/6);
+    } else {
+      groups[g] += qty;
+    }
+  });
+  return groups;
+}
+
+// Rabatt für ein einzelnes Produkt anhand seiner Größengruppe
+function getDiscountForProduct(pid, fl){
+  var groupVEs = getGroupVEs(fl);
+  var g = SIZE_GROUP[pid];
+  var tier = getActiveTier(groupVEs[g]);
+  return tier ? tier.d : 0;
+}
+
+// Click VE button → merkt sich den gewünschten Tier für den Rabatt
+// Die Mengenfelder bleiben IMMER leer bis der Kunde selbst ausfüllt
+function setTierAll(ve){
+  // Nur t0 (1 Fl.) und t1 (1 VE) sind wählbar — t3/t6 werden automatisch gesetzt
+  if(ve!==0 && ve!==1) return;
+  var tier = ve===0?'t0':'t1';
+
+  // Nochmal klicken = deselect
+  if(SELECTED_TIER === tier){
+    SELECTED_TIER = null;
+  } else {
+    SELECTED_TIER = tier;
+  }
+  calc();
+}
+
 function buildRows(){
   var cont=document.getElementById("rows");
   PRODS.forEach(function(p){
@@ -248,71 +334,155 @@ function buildRows(){
       +'<div style="text-align:center;font-size:13px;color:#999" id="ekfl'+p.id+'">'+f(p.e)+'</div>'
       +'<div style="text-align:center;font-size:13px;color:var(--g);font-weight:600" id="ek'+p.id+'">'+f(p.e*6)+'</div>'
       +'<div style="display:flex;flex-direction:column;align-items:center;gap:2px">'
-        +'<input type="number" min="0" placeholder="0" oninput="upd(\''+p.id+'\',this.value)" style="width:58px;text-align:center;border:1px solid var(--b);border-radius:4px;padding:6px 3px;font-size:14px;font-family:inherit;background:#fdfbf7"/>'
+        +'<input type="number" min="0" placeholder="0" id="inp'+p.id+'" oninput="updRaw(\''+p.id+'\',this)" style="width:68px;text-align:center;border:1px solid var(--b);border-radius:4px;padding:6px 3px;font-size:13px;font-family:inherit;background:#fdfbf7"/>'
         +'<div id="fl'+p.id+'" style="font-size:10px;color:#bbb;height:13px;line-height:13px;transition:color .2s"></div>'
         +'</div>'
       +'<div style="text-align:right;font-size:13px;font-weight:600;color:#ccc" id="sub'+p.id+'">--</div>';
     cont.appendChild(r);
   });
 }
-function upd(id,v){Q[id]=Math.max(0,parseInt(v)||0);calc();}
+
+function clearAll(){
+  PRODS.forEach(function(p){
+    Q[p.id]=0;
+    var inp=document.getElementById('inp'+p.id);
+    if(inp) inp.value='';
+  });
+  SELECTED_TIER=null;
+  calc();
+}
+
+function updRaw(id, inputEl){
+  // Wenn 1 Fl. Button aktiv: NICHT deselektieren, Menge bleibt im Fl.-Modus
+  if(SELECTED_TIER !== 't0') SELECTED_TIER=null;
+  Q[id]=Math.max(0,parseInt(inputEl.value)||0);
+  calc();
+}
+
+function isFlMode(){ return SELECTED_TIER==='t0'; }
+
 function getLines(){
+  var fl=isFlMode();
+  var totalFl=fl?Object.values(Q).reduce(function(a,b){return a+b;},0):0;
+  var totalVE=fl?Math.floor(totalFl/6):Object.values(Q).reduce(function(a,b){return a+b;},0);
   return PRODS.map(function(p){
     var qty=Q[p.id];
     if(qty===0) return null;
-    var t=getTier(qty), d=t?t.d:0;
-    return {n:p.n, s:p.s, qty:qty, ek:p.e, d:d, sub:qty*6*p.e*(1-d), tier:t?t.l:"--"};
+    var d=getDiscountForProduct(p.id, fl);
+    var groupVEs = getGroupVEs(fl);
+    var g = SIZE_GROUP[p.id];
+    var tier = getActiveTier(groupVEs[g]);
+    if(fl){
+      return {n:p.n, s:p.s, qty:qty, isFl:true, ek:p.e, d:d, sub:qty*p.e*(1-d), tier:tier?tier.l:'1 Fl.'};
+    }
+    return {n:p.n, s:p.s, qty:qty, isFl:false, ek:p.e, d:d, sub:qty*6*p.e*(1-d), tier:tier?tier.l:"--"};
   }).filter(Boolean);
 }
-function calc(){
-  var totalVE=Object.values(Q).reduce(function(a,b){return a+b;},0);
 
-  // Update each row independently based on its own qty
+function calc(){
+  var fl=isFlMode();
+  var totalFl=fl?Object.values(Q).reduce(function(a,b){return a+b;},0):0;
+  var totalVE=fl?Math.floor(totalFl/6):Object.values(Q).reduce(function(a,b){return a+b;},0);
+  var groupVEs=getGroupVEs(fl);
+
+  // Update each row – Rabatt per Größengruppe
   PRODS.forEach(function(p){
     var qty=Q[p.id];
-    var t=getTier(qty), d=t?t.d:0;
+    var g=SIZE_GROUP[p.id];
+    var tier=getActiveTier(groupVEs[g]);
+    var d=tier?tier.d:0;
     document.getElementById("ekfl"+p.id).textContent=f(p.e*(1-d));
-    document.getElementById("ek"+p.id).textContent=f(p.e*6*(1-d));
-    var sub=qty*6*p.e*(1-d), el=document.getElementById("sub"+p.id);
+    document.getElementById("ek"+p.id).textContent=fl?f(p.e*(1-d)):f(p.e*6*(1-d));
+    var sub=fl?(qty*p.e*(1-d)):(qty*6*p.e*(1-d));
+    var el=document.getElementById("sub"+p.id);
     el.textContent=qty>0?f(sub):"--";
     el.style.color=qty>0?"var(--d)":"#ccc";
     var flEl=document.getElementById("fl"+p.id);
     if(flEl){
-      flEl.textContent=qty>0?(qty+' VE = '+(qty*6)+' Fl.'):'';
-      flEl.style.color=qty>0?'var(--g)':'#bbb';
+      if(qty>0){
+        if(fl){
+          var ve=qty/6;
+          flEl.textContent=qty+' Fl.'+(qty>=6?' = '+Math.floor(qty/6)+' VE'+(qty%6?' + '+(qty%6)+' Fl.':''):'');
+        } else {
+          flEl.textContent=qty+' VE = '+(qty*6)+' Fl.';
+        }
+        flEl.style.color='var(--g)';
+      } else {
+        flEl.textContent=''; flEl.style.color='#bbb';
+      }
     }
   });
 
-  // Update tier badges based on highest individual tier achieved
-  var maxQty=Math.max.apply(null,Object.values(Q));
-  var topTier=getTier(maxQty);
-  ["t1","t3","t6"].forEach(function(x){
-    var el=document.getElementById(x);
-    if(el) el.classList.toggle("on",!!(topTier&&topTier.id===x));
-  });
+  // Spaltenheader: im Fl.-Modus zweite Spalte = "EK / VE" bleibt, erste = EK / Fl.
+  var ekHeader=document.querySelector('.th span:nth-child(5)');
+  if(ekHeader) ekHeader.textContent=fl?'EK / Fl.':'EK / VE (6 Fl.)';
+
+  // Tier-Buttons:
+  // t0 / t1 → klickbar, zeigen den gewählten Modus
+  var t0el=document.getElementById('t0'), t1el=document.getElementById('t1');
+  if(t0el) t0el.classList.toggle('on', SELECTED_TIER==='t0');
+  if(t1el) t1el.classList.toggle('on', SELECTED_TIER==='t1' || (!SELECTED_TIER && !isFlMode() && totalVE>0));
+
+  // t3 / t6 → immer sichtbar (weiß), leuchten golden wenn Schwelle erreicht
+  var maxVE=Math.max(groupVEs['500']||0, groupVEs['100']||0, groupVEs['box']||0);
+  var any3=(maxVE>=3 && maxVE<6), any6=(maxVE>=6);
+  var t3el=document.getElementById('t3'), t6el=document.getElementById('t6');
+  if(t3el){ t3el.classList.toggle('on', any3); t3el.style.opacity='1'; }
+  if(t6el){ t6el.classList.toggle('on', any6); t6el.style.opacity='1'; }
 
   var ls=getLines();
   var net=ls.reduce(function(a,b){return a+b.sub;},0);
-  var vat=net*.19, sh=totalVE===0?0:totalVE===1?4.99:0, gr=net+vat+sh;
+  var vat=net*.19;
+  var sh=(fl?totalFl:totalVE*6)===0?0:totalVE>=2?0:4.99;
+  var gr=net+vat+sh;
 
-  // Cart counter
+  // Cart counter – im Fl.-Modus Flaschen anzeigen, sonst VE
   var numEl=document.getElementById('cart-num');
+  var cartLabel=document.getElementById('cart-label');
   var badge=document.getElementById('cart-badge');
+  var totalItems=Object.values(Q).reduce(function(a,b){return a+b;},0);
   var prev=parseInt(numEl.textContent)||0;
-  numEl.textContent=totalVE;
-  badge.style.display=totalVE>0?'flex':'none';
-  if(totalVE!==prev&&totalVE>0){numEl.style.animation='none';void numEl.offsetWidth;numEl.style.animation='cartPop .3s ease';}
+  numEl.textContent=totalItems;
+  if(cartLabel) cartLabel.textContent=fl?'Fl.':'VE';
+  badge.style.display=totalItems>0?'flex':'none';
+  var clearBtn=document.getElementById('clear-btn');
+  if(clearBtn) clearBtn.style.display=totalItems>0?'flex':'none';
+  if(totalItems!==prev&&totalItems>0){numEl.style.animation='none';void numEl.offsetWidth;numEl.style.animation='cartPop .3s ease';}
+
+  // Zusammenfassung – Staffel-Hinweis pro Gruppe
+  var staffelHint='';
+  if(fl&&totalFl>0){
+    var tierFl=getActiveTier(Math.floor(totalFl/6));
+    staffelHint='<div style="font-size:11px;color:var(--g);padding:4px 0;font-style:italic">'
+      +totalFl+' Fl. gesamt = '+Math.floor(totalFl/6)+' VE'+(totalFl%6?' + '+(totalFl%6)+' Fl.':'')
+      +(tierFl&&Math.floor(totalFl/6)>=1?' \u2192 Staffel: '+tierFl.l+' (-'+(tierFl.d*100).toFixed(0)+'%)':'')
+      +'</div>';
+  } else if(!fl&&totalVE>0){
+    var parts=[];
+    ['500','100','box'].forEach(function(g){
+      var ve=groupVEs[g];
+      if(ve>0){
+        var t=getActiveTier(ve);
+        var label=g==='500'?'500 ml':g==='100'?'100 ml':'3×100 ml';
+        parts.push(label+': '+ve+' VE'+(t&&t.d>0?' \u2192 -'+(t.d*100).toFixed(0)+'%':''));
+      }
+    });
+    if(parts.length>0){
+      staffelHint='<div style="font-size:11px;color:var(--g);padding:4px 0;font-style:italic">'+parts.join(' &nbsp;|&nbsp; ')+'</div>';
+    }
+  }
 
   document.getElementById("sl").innerHTML=ls.length===0
     ?'<div style="color:#ccc;font-size:13px;font-style:italic;padding:6px 0">'+(LANG==='en'?'No products selected yet':'Noch keine Produkte ausgew\u00e4hlt')+'</div>'
     :ls.map(function(l){
         var disc=l.d>0?' <span style="font-size:10px;color:var(--g)">(-'+(l.d*100).toFixed(0)+'%)</span>':'';
-        return'<div class="sr"><span>'+l.n+' '+l.s+' \u00d7 '+l.qty+' VE'+disc+'</span><span style="font-weight:600">'+f(l.sub)+'</span></div>';
-      }).join("");
+        var label=l.isFl?(l.n+' '+l.s+' \u00d7 '+l.qty+' Fl.'):(l.n+' '+l.s+' \u00d7 '+l.qty+' VE');
+        return'<div class="sr"><span>'+label+disc+'</span><span style="font-weight:600">'+f(l.sub)+'</span></div>';
+      }).join("")+staffelHint;
 
   document.getElementById("sn").textContent=f(net);
   document.getElementById("sv").textContent=f(vat);
-  document.getElementById("ss").textContent=totalVE===0?"--":totalVE===1?"4,99 \u20ac":"kostenlos";
+  document.getElementById("ss").textContent=(totalItems===0)?"--":totalVE>=2?"kostenlos":"4,99\u00a0\u20ac";
   document.getElementById("ss").style.color=totalVE>=2?"var(--gr)":"var(--m)";
   document.getElementById("sg").textContent=f(gr);
   document.getElementById("db").style.display="none";
@@ -322,13 +492,13 @@ function calc(){
   var ok=document.getElementById("co").value.trim()&&document.getElementById("em").value.trim()&&document.getElementById("ad").value.trim()&&document.getElementById("zi").value.trim()&&ls.length>0&&agbOk;
   document.getElementById("sub").disabled=!ok;
   var hint=document.getElementById("min-order-hint");
-  if(hint) hint.style.display=totalVE>0&&totalVE<2?"block":"none";
+  if(hint) hint.style.display=(!fl&&totalVE>0&&totalVE<2)?"block":"none";
 }
 ["co","em","ad","zi"].forEach(function(id){document.getElementById(id).addEventListener("input",calc);});
 function send(){
   var totalVE=Object.values(Q).reduce(function(a,b){return a+b;},0);
   var ls=getLines();
-  var net=ls.reduce(function(a,b){return a+b.sub;},0),vat=net*.19,sh=totalVE===1?4.99:0,gr=net+vat+sh;
+  var net=ls.reduce(function(a,b){return a+b.sub;},0),vat=net*.19,sh=totalVE>=2?0:4.99,gr=net+vat+sh;
   var co=document.getElementById("co").value.trim();
   document.getElementById("fe").value=document.getElementById("em").value;
   document.getElementById("fc").value=co;
@@ -340,10 +510,10 @@ function send(){
   document.getElementById("fld").value=document.getElementById("ld").value||"–";
   document.getElementById("fustid").value=document.getElementById("ustid").value||"–";
   document.getElementById("fland").value=document.getElementById("land").value||"Deutschland";
-  document.getElementById("ft").value=ls.map(function(l){return l.n+" "+l.qty+"VE("+l.tier+")";}).join(", ");
+  document.getElementById("ft").value=ls.map(function(l){return l.isFl?(l.n+" "+l.qty+"Fl."):(l.n+" "+l.qty+"VE("+l.tier+")");}).join(", ");
   document.getElementById("fn").value=f(net);document.getElementById("fv").value=f(vat);
   document.getElementById("fsh").value=sh>0?f(sh):"kostenlos";document.getElementById("fg").value=f(gr);
-  document.getElementById("fo").value=ls.map(function(l){return l.n+" "+l.s+" x "+l.qty+" VE ["+l.tier+"] = "+f(l.sub);}).join(" | ");
+  document.getElementById("fo").value=ls.map(function(l){return l.isFl?(l.n+" "+l.s+" x "+l.qty+" Fl. = "+f(l.sub)):(l.n+" "+l.s+" x "+l.qty+" VE ["+l.tier+"] = "+f(l.sub));}).join(" | ");
   fetch("https://api.web3forms.com/submit",{method:"POST",body:new FormData(document.getElementById("frm")),headers:{"Accept":"application/json"}})
   .then(function(r){
     if(r.ok){ showSuccess(co,ls,gr); }
@@ -368,7 +538,10 @@ function showSuccess(co,ls,gr){
         totalVE: Object.values(Q).reduce(function(a,b){return a+b;},0)
       };
       document.getElementById("os").textContent="Wir melden uns in K\u00fcrze bei "+co+".";
-      document.getElementById("oi").innerHTML=ls.map(function(l){return'<div class="sr"><span>'+l.n+' '+l.s+' x '+l.qty+' VE</span><span style="font-weight:600">'+f(l.sub)+'</span></div>';}).join("");
+      document.getElementById("oi").innerHTML=ls.map(function(l){
+        var label=l.isFl?(l.n+' '+l.s+' x '+l.qty+' Fl.'):(l.n+' '+l.s+' x '+l.qty+' VE');
+        return'<div class="sr"><span>'+label+'</span><span style="font-weight:600">'+f(l.sub)+'</span></div>';
+      }).join("");
       document.getElementById("og").textContent=f(gr);
       document.getElementById("main").style.display="none";
       document.getElementById("ok").classList.add("vis");
@@ -732,7 +905,7 @@ var I18N = {
     'lbl-versand': 'Versand',
     'lbl-gesamt': 'Gesamt Brutto',
     'lbl-btn': 'Bestellung absenden',
-    'lbl-staffel': 'Staffel pro Produkt  ·  1 VE = 6 Fl.  ·  ab 2 VE gesamt versandkostenfrei',
+    'lbl-staffel': 'Staffel je Format  ·  1 VE = 6 Fl.  ·  ab 2 VE gesamt versandkostenfrei',
     'lbl-ustid': 'USt-IdNr. / Steuernummer',
     'lbl-land': 'Land',
     'lang-btn': 'EN'
@@ -756,7 +929,7 @@ var I18N = {
     'lbl-versand': 'Shipping',
     'lbl-gesamt': 'Total Gross',
     'lbl-btn': 'Place Order',
-    'lbl-staffel': 'Tier pricing per product  ·  1 case = 6 btl.  ·  free shipping from 2 cases',
+    'lbl-staffel': 'Tier pricing per format  ·  1 case = 6 btl.  ·  free shipping from 2 cases',
     'lbl-ustid': 'VAT ID / Tax Number',
     'lbl-land': 'Country',
     'lang-btn': 'DE'
