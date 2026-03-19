@@ -22,6 +22,8 @@ input:focus,textarea:focus{outline:none;border-color:var(--g)}
 .tb{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
 .ti{padding:7px 16px;border-radius:4px;border:1px solid var(--b);background:var(--w);text-align:center;transition:all .2s;cursor:pointer;user-select:none}
 .ti:hover{border-color:var(--g);background:rgba(200,168,75,.06)}
+#t3:hover,#t6:hover{border-color:var(--b);background:var(--w)}
+#t3:hover,#t6:hover{border-color:var(--b);background:var(--w)}
 .ti.on{border-color:var(--g);background:var(--gl)}
 .tl{font-family:'Playfair Display',serif;font-weight:700;font-size:13px}
 .td{font-size:11px;color:var(--g);font-weight:600}
@@ -147,8 +149,8 @@ textarea{resize:vertical}
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
       <div class="ti" id="t0" onclick="setTierAll(0)" style="cursor:pointer;user-select:none" title="Einzelflaschen bestellen"><div class="tl">1 Fl.</div><div class="td" style="color:#aaa">Einzeln</div></div>
       <div class="ti" id="t1" onclick="setTierAll(1)" style="cursor:pointer;user-select:none" title="Verkaufseinheiten bestellen (1 VE = 6 Fl.)"><div class="tl">1 VE</div><div class="td">Standard</div></div>
-      <div class="ti" id="t3" style="cursor:default;user-select:none" title="Wird automatisch aktiv ab 3 VE je Format · -8%"><div class="tl">3 VE</div><div class="td">-8%</div></div>
-      <div class="ti" id="t6" style="cursor:default;user-select:none" title="Wird automatisch aktiv ab 6 VE je Format · -15%"><div class="tl">6 VE</div><div class="td">-15%</div></div>
+      <div class="ti" id="t3" style="cursor:default;user-select:none"><div class="tl">3 VE</div><div class="td">-8%</div></div>
+      <div class="ti" id="t6" style="cursor:default;user-select:none"><div class="tl">6 VE</div><div class="td">-15%</div></div>
       <div id="cart-badge" style="display:none;align-items:center;gap:5px;background:var(--g);border-radius:16px;padding:4px 11px 4px 8px;margin-left:6px">
         <span style="font-size:13px">🛒</span>
         <span id="cart-num" style="font-weight:700;font-size:13px;color:#fff;min-width:10px;display:inline-block"></span>
